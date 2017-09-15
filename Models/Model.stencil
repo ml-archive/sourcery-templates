@@ -1,6 +1,6 @@
 {# Inline model generation #}
 
-{% for type in types.implementing.SourceryModel|!protocol %}
+{% for type in types.based.Model|!protocol|annotated:"model" %}
 	// sourcery:inline:auto:{{ type.name }}.Models
 	{% if type.annotations.warning != "off" %}
 	/*

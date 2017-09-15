@@ -1,6 +1,6 @@
 {# One row convertible file per model #}
 
-{% for type in types.implementing.SourceryModel|!protocol %}
+{% for type in types.based.Model|!protocol|annotated:"model" %}
 // sourcery:file:Models/{{ type.localName }}/{{ type.localName }}+RowConvertible.generated.swift
 
 import Vapor

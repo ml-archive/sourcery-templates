@@ -1,6 +1,6 @@
 {# One Node file per model #}
 
-{% for type in types.implementing.SourceryModel|!protocol %}
+{% for type in types.based.Model|!protocol|annotated:"model" %}
 // sourcery:file:Models/{{ type.localName }}/{{ type.localName }}+NodeRepresentable.generated.swift
 
 import Vapor

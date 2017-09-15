@@ -1,4 +1,6 @@
-{% for type in types.implementing.Controller|!protocol %}
+{# One route file per model #}
+
+{% for type in types.all|!protocol|annotated:"controller" %}
 // sourcery:file:Routes/{{ type.annotations.collection }}Routes/{{ type.annotations.collection }}Routes.generated.swift
 
 import Vapor

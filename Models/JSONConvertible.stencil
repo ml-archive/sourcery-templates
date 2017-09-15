@@ -1,6 +1,6 @@
 {# One JSON file per model #}
 
-{% for type in types.implementing.SourceryModel|!protocol %}
+{% for type in types.based.Model|!protocol|annotated:"model" %}
 // sourcery:file:Models/{{ type.localName }}/{{ type.localName }}+JSONConvertible.generated.swift
 
 import Vapor
