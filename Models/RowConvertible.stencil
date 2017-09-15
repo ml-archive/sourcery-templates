@@ -1,0 +1,30 @@
+{# One row convertible file per model #}
+
+{% for type in types.implementing.SourceryModel|!protocol %}
+// sourcery:file:Models/{{ type.localName }}/{{ type.localName }}+RowConvertible.generated.swift
+
+import Vapor
+import Fluent
+
+extension {{ type.localName }}: RowConvertible {
+	// MARK: - RowConvertible ({{ type.name }})
+	convenience internal init (row: Row) throws {
+		try self.init(
+			{% for var in type.storedVariables|!annotated:"ignore" %}
+			{{ var.name }}: row.get(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}){% if not forloop.last %},{% endif %}
+			{% endfor %}
+		)
+	}
+
+	internal func makeRow() throws -> Row {
+		var row = Row()
+		
+		{% for var in type.storedVariables|!annotated:"ignore" %}
+		try row.set(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}, {{ var.name }})
+		{% endfor %}
+
+		return row
+	}
+}
+// sourcery:end
+{% endfor %}

@@ -1,0 +1,9 @@
+{% for type in types.based.TestCase|!protocol %}
+	// sourcery:inline:auto:{{ type.name }}.Tests
+	static let allTests = [
+		{% for func in type.methods where func.shortName|hasPrefix:"test" %}
+		("{{ func.shortName }}", {{ func.shortName }}),
+		{% endfor %}
+	]
+	// sourcery:end
+{% endfor %}

@@ -1,0 +1,41 @@
+{# Inline model generation #}
+
+{% for type in types.implementing.SourceryModel|!protocol %}
+	// sourcery:inline:auto:{{ type.name }}.Models
+	{% if type.annotations.warning != "off" %}
+	/*
+	 * WARNING: HERE BE 🐉s | THIS WAS AUTO-GENERATED
+	 *
+	 * Q & A
+	 * -----------------
+	 * Q: I wanna touch this. Can I?
+	 * A: No.
+	 *
+	 * Q: What if I _need_ to touch it?
+	 * A: Check out our wiki at https://nodes.website/docs-for-sourcery for configuration options
+	 */
+	{% endif %}
+	let storage = Storage()
+
+	{% for var in type.storedVariables|!annotated:"ignore"|annotated:"enumName" %}
+	enum {{ var.annotations.enumName }}: {{ var.annotations.enumType }}, RawStringConvertible {
+		{% for case in var.annotations.enumCase %}
+		case {{ case }}
+		{% endfor %}
+
+		static let all = [{% for case in var.annotations.enumCase %}{{ var.annotations.enumName }}.{{ case }}{% if not forloop.last %}, {% endif %}{% endfor %}]
+        static let allDescription = {{ var.annotations.enumName }}.all.map { $0.rawValue }
+	}
+	{% endfor %}
+
+	internal init(
+		{% for var in type.storedVariables|!annotated:"ignore" %}
+		{{ var.name }}: {{ var.typeName.description }}{% if var.isOptional %} = nil{% endif %}{% if not forloop.last %},{% endif %}
+		{% endfor %}
+	) {
+		{% for var in type.storedVariables|!annotated:"ignore" %}
+		self.{{ var.name }} = {{ var.name }}
+		{% endfor %}
+	} 
+	// sourcery:end
+{% endfor %}
