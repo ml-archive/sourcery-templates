@@ -1,6 +1,6 @@
 {# One preparation file per model #}
 
-{% for type in types.based.Model|!protocol|annotated:"model" %}
+{% for type in types.based.Model|!protocol|annotated:"model"|!annotated:"ignorePreparation" %}
 // sourcery:file:Models/{{ type.localName }}/{{ type.localName }}+Preparation.generated.swift
 
 import Vapor
@@ -13,8 +13,7 @@ import {{ var }}
 {% endfor %}
 {% endif %}
 
-internal extension {{ type.localName }} {
-	{% if type.based.Preparation %}
+extension {{ type.localName }}: Preparation {
 	internal enum DatabaseKeys {
 		static let id = {{ type.localName }}.idKey
 		{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignorePrep" %}
@@ -27,7 +26,7 @@ internal extension {{ type.localName }} {
 		try database.create(self) {
 			$0.id()
 			{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignorePrep" %}
-			$0.{% if var|annotated:"preparation" %}{{ var.annotations.preparation }}{% elif var|annotated:"enumName" %}enum{% else %}{{ var.typeName.description|lowercase|replace:"?","" }}{% endif %}{% if var.annotations.preparation == "parent" %}({{ var.annotations.foreignTable }}.self, optional: {% if var.isOptional %}true{% else %}false{% endif %}, unique: {{ var.annotations.unique }}){% elif var.annotations.enumName %}(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}, options: {{ var.annotations.enumName }}.allDescription){% else %}(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}{% if var.isOptional %}, optional: true{% endif %}){% endif %}
+			$0.{% if var|annotated:"preparation" %}{{ var.annotations.preparation }}{% elif var|annotated:"enumName" %}enum{% else %}{{ var.typeName.description|lowercase|replace:"?","" }}{% endif %}{% if var.annotations.preparation == "foreignId" %}(for: {{ var.annotations.foreignTable }}.self, optional: {% if var.isOptional %}true{% else %}false{% endif %}, unique: {{ var.annotations.unique }}, foreignIdKey: {% if var.annotations.foreignIdKey %}"{{ var.annotations.foreignIdKey }}"{% else %}{{ var.annotations.foreignTable }}.idKey{% if var.annotations.foreignKeyName %}, foreignKeyName: "{{ var.annotations.foreignKeyName }}"{% endif %}{% endif %}){% elif var.annotations.enumName %}(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}, options: {{ var.annotations.enumName }}.allDescription){% else %}(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}{% if var.isOptional %}, optional: true{% endif %}){% endif %}
 			{% endfor %}
 		}
 
@@ -39,7 +38,6 @@ internal extension {{ type.localName }} {
 	internal static func revert(_ database: Database) throws {
 		try database.delete(self)
 	}
-	{% endif %}
 }
 // sourcery:end
 {% endfor %}

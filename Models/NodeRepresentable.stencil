@@ -1,12 +1,12 @@
 {# One Node file per model #}
 
-{% for type in types.based.Model|!protocol|annotated:"model" %}
+{% for type in types.based.Model|!protocol|annotated:"model"|!annotated:"ignoreNodeRepresentable" %}
 // sourcery:file:Models/{{ type.localName }}/{{ type.localName }}+NodeRepresentable.generated.swift
 
 import Vapor
 import Fluent
 
-internal extension {{ type.localName }} {
+extension {{ type.localName }}: NodeRepresentable {
 	internal enum NodeKeys: String {
 		{% for var in type.storedVariables|!annotated:"ignore" %}
 		case {% if var.annotations.nodeKey %}{{ var.annotations.nodeKey }}{% else %}{{ var.name }}{% endif %}
@@ -30,6 +30,5 @@ internal extension {{ type.localName }} {
 	}
 }
 
-extension {{ type.localName }}: NodeRepresentable {}
 // sourcery:end
 {% endfor %}
