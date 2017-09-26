@@ -23,6 +23,6 @@
 		{% for var in type.storedVariables|!annotated:"ignore" %}
 		self.{{ var.name }} = {{ var.name }}
 		{% endfor %}
-	} 
+	}
 	// sourcery:end
 {% endfor %}
