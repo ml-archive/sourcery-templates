@@ -18,7 +18,7 @@ extension {{ type.localName }}: RowConvertible {
 
 	internal func makeRow() throws -> Row {
 		var row = Row()
-		
+
 		{% for var in type.storedVariables|!annotated:"ignore" %}
 		try row.set(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}, {{ var.name }})
 		{% endfor %}
