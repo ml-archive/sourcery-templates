@@ -17,7 +17,7 @@ extension {{ type.localName }}: NodeRepresentable {
 	func makeNode(in context: Context?) throws -> Node {
 		var node = Node([:])
 
-        try node.set({{ type.name }}.idKey, id)
+		try node.set({{ type.name }}.idKey, id)
 		{% for var in type.storedVariables|!annotated:"ignore" %}
 		try node.set(NodeKeys.{% if var.annotations.nodeKey %}{{ var.annotations.nodeKey }}{% else %}{{ var.name }}{% endif %}.rawValue, {{ var.name }})
 		{% endfor %}
@@ -26,7 +26,7 @@ extension {{ type.localName }}: NodeRepresentable {
 		try node.set({{ type.localName }}.updatedAtKey, updatedAt)
 		{% endif %}
 
-        return node
+		return node
 	}
 }
 

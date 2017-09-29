@@ -7,31 +7,31 @@ import Vapor
 import Fluent
 
 extension {{ type.localName }}: JSONConvertible {
-	internal enum JSONKeys: String {
-		{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSON" %}
-		case {% if var.annotations.jsonKey %}{{ var.annotations.jsonKey }}{% else %}{{ var.name }}{% endif %}
-		{% endfor %}
-	}
+    internal enum JSONKeys: String {
+        {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSON" %}
+        case {% if var.annotations.jsonKey %}{{ var.annotations.jsonKey }}{% else %}{{ var.name }}{% endif %}
+        {% endfor %}
+    }
 
-	// MARK: - JSONConvertible ({{ type.name }})
-	internal convenience init(json: JSON) throws {
-		try self.init(
-			{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSON" %}
-			{{ var.name }}: json.get(JSONKeys.{% if var.annotations.jsonKey %}{{ var.annotations.jsonKey }}{% else %}{{ var.name }}{% endif %}.rawValue){% if not forloop.last %},{% endif %}
-			{% endfor %}
-		)
-	}
+    // MARK: - JSONConvertible ({{ type.name }})
+    internal convenience init(json: JSON) throws {
+        try self.init(
+            {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSON" %}
+            {{ var.name }}: json.get(JSONKeys.{% if var.annotations.jsonKey %}{{ var.annotations.jsonKey }}{% else %}{{ var.name }}{% endif %}.rawValue){% if not forloop.last %},{% endif %}
+            {% endfor %}
+        )
+    }
 
-	internal func makeJSON() throws -> JSON {
-		var json = JSON()
+    internal func makeJSON() throws -> JSON {
+        var json = JSON()
 
         try json.set({{ type.name }}.idKey, id)
-		{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSON" %}
-		try json.set(JSONKeys.{% if var.annotations.jsonKey %}{{ var.annotations.jsonKey }}{% else %}{{ var.name }}{% endif %}.rawValue, {{ var.name }})
-		{% endfor %}
+        {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSON" %}
+        try json.set(JSONKeys.{% if var.annotations.jsonKey %}{{ var.annotations.jsonKey }}{% else %}{{ var.name }}{% endif %}.rawValue, {{ var.name }})
+        {% endfor %}
 
         return json
-	}
+    }
 }
 
 extension {{ type.localName }}: ResponseRepresentable {}
