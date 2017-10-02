@@ -5,6 +5,13 @@
 
 import Vapor
 import Fluent
+{% if type.annotations.import %}
+import {{ type.annotations.import }}
+{% else %}
+{% for var in type.annotations.imports %}
+import {{ var }}
+{% endfor %}
+{% endif %}
 
 extension {{ type.localName }}: NodeRepresentable {
 	internal enum NodeKeys: String {
@@ -19,7 +26,7 @@ extension {{ type.localName }}: NodeRepresentable {
 
 		try node.set({{ type.name }}.idKey, id)
 		{% for var in type.storedVariables|!annotated:"ignore" %}
-		try node.set(NodeKeys.{% if var.annotations.nodeKey %}{{ var.annotations.nodeKey }}{% else %}{{ var.name }}{% endif %}.rawValue, {{ var.name }})
+		try node.set(NodeKeys.{% if var.annotations.nodeKey %}{{ var.annotations.nodeKey }}{% else %}{{ var.name }}{% endif %}.rawValue, {% if var.annotations.nodeValue %}{{ var.annotations.nodeValue }}{% else %}{{ var.name }}{% endif %})
 		{% endfor %}
 		{% if type.based.Timestampable %}
 		try node.set({{ type.localName }}.createdAtKey, createdAt)

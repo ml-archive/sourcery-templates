@@ -5,6 +5,13 @@
 
 import Vapor
 import Fluent
+{% if type.annotations.import %}
+import {{ type.annotations.import }}
+{% else %}
+{% for var in type.annotations.imports %}
+import {{ var }}
+{% endfor %}
+{% endif %}
 
 extension {{ type.localName }}: JSONConvertible {
     internal enum JSONKeys: String {
@@ -27,7 +34,7 @@ extension {{ type.localName }}: JSONConvertible {
 
         try json.set({{ type.name }}.idKey, id)
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSON" %}
-        try json.set(JSONKeys.{% if var.annotations.jsonKey %}{{ var.annotations.jsonKey }}{% else %}{{ var.name }}{% endif %}.rawValue, {{ var.name }})
+        try json.set(JSONKeys.{% if var.annotations.jsonKey %}{{ var.annotations.jsonKey }}{% else %}{{ var.name }}{% endif %}.rawValue, {% if var.annotations.jsonValue %}{{ var.annotations.jsonValue }}{% else %}{{ var.name }}{% endif %})
         {% endfor %}
 
         return json
