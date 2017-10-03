@@ -4,7 +4,7 @@
     // sourcery:inline:auto:{{ type.name }}.Models
     let storage = Storage()
 
-    {% for var in type.storedVariables|!annotated:"ignore"|annotated:"enumName" %}
+    {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreModel"|annotated:"enumName" %}
     enum {{ var.annotations.enumName }}: {{ var.annotations.enumType }}, RawStringConvertible {
         {% for case in var.annotations.enumCase %}
         case {{ case }}
@@ -16,8 +16,8 @@
     {% endfor %}
 
     internal init(
-        {% for var in type.storedVariables|!annotated:"ignore" %}
-        {{ var.name }}: {{ var.typeName.description }}{% if var.isOptional %} = nil{% endif %}{% if not forloop.last %},{% endif %}
+        {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreModel" %}
+        {{ var.name }}: {{ var.typeName.description }}{% if var.isOptional %} = nil{% elif var.annotations.defaultInitValue %} = {{ var.annotations.defaultInitValue }}{% endif %}{% if not forloop.last %},{% endif %}
         {% endfor %}
     ) {
         {% for var in type.storedVariables|!annotated:"ignore" %}
