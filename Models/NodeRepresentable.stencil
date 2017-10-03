@@ -16,7 +16,7 @@ import {{ var }}
 extension {{ type.localName }}: NodeRepresentable {
 	internal enum NodeKeys: String {
 		{% for var in type.storedVariables|!annotated:"ignore" %}
-		case {% if var.annotations.nodeKey %}{{ var.annotations.nodeKey }}{% else %}{{ var.name }}{% endif %}
+		case {{ var.annotations.nodeKey|default:var.name }}
 		{% endfor %}
 	}
 
@@ -26,7 +26,7 @@ extension {{ type.localName }}: NodeRepresentable {
 
 		try node.set({{ type.name }}.idKey, id)
 		{% for var in type.storedVariables|!annotated:"ignore" %}
-		try node.set(NodeKeys.{% if var.annotations.nodeKey %}{{ var.annotations.nodeKey }}{% else %}{{ var.name }}{% endif %}.rawValue, {% if var.annotations.nodeValue %}{{ var.annotations.nodeValue }}{% else %}{{ var.name }}{% endif %})
+		try node.set(NodeKeys.{{ var.annotations.nodeKey|default:var.name }}.rawValue, {{ var.annotations.nodeValue|default:var.name }})
 		{% endfor %}
 		{% if type.based.Timestampable %}
 		try node.set({{ type.localName }}.createdAtKey, createdAt)
