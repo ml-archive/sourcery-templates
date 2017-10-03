@@ -16,7 +16,7 @@ import {{ var }}
 extension {{ type.localName }}: Preparation {
 	internal enum DatabaseKeys {
 		static let id = {{ type.localName }}.idKey
-		{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignorePrep" %}
+		{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignorePreparation" %}
 		static let {% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %} = "{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}"
 		{% endfor %}
 	}
@@ -25,12 +25,12 @@ extension {{ type.localName }}: Preparation {
 	internal static func prepare(_ database: Database) throws {
 		try database.create(self) {
 			$0.id()
-			{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignorePrep" %}
+			{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignorePreparation" %}
 			$0.{% if var|annotated:"preparation" %}{{ var.annotations.preparation }}{% elif var|annotated:"enumName" %}enum{% else %}{{ var.typeName.description|lowercase|replace:"?","" }}{% endif %}{% if var.annotations.preparation == "foreignId" %}(for: {{ var.annotations.foreignTable }}.self, optional: {% if var.isOptional %}true{% else %}false{% endif %}, unique: {{ var.annotations.unique }}, foreignIdKey: {% if var.annotations.foreignIdKey %}"{{ var.annotations.foreignIdKey }}"{% else %}DatabaseKeys.{{ var.name }}{% if var.annotations.foreignKeyName %}, foreignKeyName: "{{ var.annotations.foreignKeyName }}"{% endif %}{% endif %}){% elif var.annotations.enumName %}(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}, options: {{ var.annotations.enumName }}.allDescription){% else %}(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}{% if var.annotations.type %}, type: "{{ var.annotations.type }}"{% endif %}{% if var.isOptional %}, optional: true{% endif %}{% if var.annotations.unique %}, unique: true{% endif %}){% endif %}
 			{% endfor %}
 		}
 
-		{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignorePrep"|annotated:"index" %}
+		{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignorePreparation"|annotated:"index" %}
 		try database.index(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}, for: {{ type.name }}.self)
 		{% endfor %}
 	}

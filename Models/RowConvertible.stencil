@@ -10,7 +10,7 @@ extension {{ type.localName }}: RowConvertible {
 	// MARK: - RowConvertible ({{ type.name }})
 	convenience internal init (row: Row) throws {
 		try self.init(
-			{% for var in type.storedVariables|!annotated:"ignore" %}
+			{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreRowConvertible" %}
 			{{ var.name }}: row.get(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}){% if not forloop.last %},{% endif %}
 			{% endfor %}
 		)
@@ -19,7 +19,7 @@ extension {{ type.localName }}: RowConvertible {
 	internal func makeRow() throws -> Row {
 		var row = Row()
 
-		{% for var in type.storedVariables|!annotated:"ignore" %}
+		{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreRowConvertible" %}
 		try row.set(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}, {{ var.name }})
 		{% endfor %}
 
