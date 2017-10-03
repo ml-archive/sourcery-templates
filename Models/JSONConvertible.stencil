@@ -24,7 +24,7 @@ extension {{ type.localName }}: JSONConvertible {
     internal convenience init(json: JSON) throws {
         try self.init(
             {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSON" %}
-            {{ var.name }}: json.get(JSONKeys.{% if var.annotations.jsonKey %}{{ var.annotations.jsonKey }}{% else %}{{ var.name }}{% endif %}.rawValue){% if not forloop.last %},{% endif %}
+            {{ var.name }}: json.get(JSONKeys.{{ var.annotations.jsonKey|default:var.name }}.rawValue){% if not forloop.last %},{% endif %}
             {% endfor %}
         )
     }
@@ -34,7 +34,7 @@ extension {{ type.localName }}: JSONConvertible {
 
         try json.set({{ type.name }}.idKey, id)
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSON" %}
-        try json.set(JSONKeys.{% if var.annotations.jsonKey %}{{ var.annotations.jsonKey }}{% else %}{{ var.name }}{% endif %}.rawValue, {% if var.annotations.jsonValue %}{{ var.annotations.jsonValue }}{% else %}{{ var.name }}{% endif %})
+        try json.set(JSONKeys.{{ var.annotations.jsonKey|default:var.name }}.rawValue, {{ var.annotations.jsonValue|default:var.name}})
         {% endfor %}
 
         return json
