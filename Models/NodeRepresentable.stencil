@@ -15,7 +15,7 @@ import {{ var }}
 
 extension {{ type.localName }}: NodeRepresentable {
 	internal enum NodeKeys: String {
-		{% for var in type.storedVariables|!annotated:"ignore" %}
+		{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreNode" %}
 		case {% if var.annotations.nodeKey %}{{ var.annotations.nodeKey }}{% else %}{{ var.name }}{% endif %}
 		{% endfor %}
 	}
@@ -25,7 +25,7 @@ extension {{ type.localName }}: NodeRepresentable {
 		var node = Node([:])
 
 		try node.set({{ type.name }}.idKey, id)
-		{% for var in type.storedVariables|!annotated:"ignore" %}
+		{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreNode" %}
 		try node.set(NodeKeys.{% if var.annotations.nodeKey %}{{ var.annotations.nodeKey }}{% else %}{{ var.name }}{% endif %}.rawValue, {% if var.annotations.nodeValue %}{{ var.annotations.nodeValue }}{% else %}{{ var.name }}{% endif %})
 		{% endfor %}
 		{% if type.based.Timestampable %}
