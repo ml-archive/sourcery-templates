@@ -11,7 +11,7 @@ extension {{ type.localName }}: RowConvertible {
 	convenience internal init (row: Row) throws {
 		try self.init(
 			{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreRowConvertible" %}
-			{{ var.name }}: row.get(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}){% if not forloop.last %},{% endif %}
+			{{ var.name }}: row.get(DatabaseKeys.{{ var.annotations.databaseKey|default:var.name }}){% if not forloop.last %},{% endif %}
 			{% endfor %}
 		)
 	}
@@ -20,7 +20,7 @@ extension {{ type.localName }}: RowConvertible {
 		var row = Row()
 
 		{% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreRowConvertible" %}
-		try row.set(DatabaseKeys.{% if var.annotations.databaseKey %}{{ var.annotations.databaseKey }}{% else %}{{ var.name }}{% endif %}, {{ var.name }})
+		try row.set(DatabaseKeys.{{ var.annotations.databaseKey|default:var.name }}, {{ var.name }})
 		{% endfor %}
 
 		return row
