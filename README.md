@@ -35,9 +35,11 @@ This collection of templates is related to models and automating their conversio
 | ignoreRowConvertible | Prevents the property from being included in the generated code. |
 
 ## NodeRepresentable
-| Key   | Description                                                      |
-| ------| ---------------------------------------------------------------- |
-| ignore| Prevents the property from being included in the generated code. |
+| Key                    | Description                                                     |
+| -----------------------| ----------------------------------------------------------------|
+| nodeKey                | Set the key for node (de)serialization.                         |
+| ignore                 | Prevents the property from being included in the generated code.|
+| ignoreNodeRepresentable| Prevents the property from being included in the generated code.|
 
 ## JSONConvertible
 | Key   | Description                                                      |
