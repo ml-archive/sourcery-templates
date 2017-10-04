@@ -28,9 +28,11 @@ This collection of templates is related to models and automating their conversio
 | ignorePreparation | Prevents the preparation from being included in the generated preparation code.                                     |
 
 ## RowConvertible
-| Key   | Description                                                      |
-| ------| ---------------------------------------------------------------- |
-| ignore| Prevents the property from being included in the generated code. |
+| Key                  | Description                                                      |
+| -------------------- | ---------------------------------------------------------------- |
+| databaseKey          | Set the database key (default is the name of the member).        |
+| ignore               | Prevents the property from being included in the generated code. |
+| ignoreRowConvertible | Prevents the property from being included in the generated code. |
 
 ## NodeRepresentable
 | Key   | Description                                                      |
