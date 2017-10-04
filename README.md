@@ -1,8 +1,49 @@
-# Sourcery Stencils
-Sourcery stencil files for generating Vapor 2 boilerplate
+# Sourcery Templates ✨
+[Sourcery](https://github.com/krzysztofzablocki/Sourcery) stencil files for generating Vapor 2 boilerplate.
 
 # Models
-## Annotations
+This collection of templates is related to models and automating their conversions to common Vapor types.
+
+## Model
+|  Key      | Description                                                     |
+| --------- | ----------------------------------------------------------------|
+|  enumName | Generate a Swift enum for MySQL with accessors for allCases.    |
+|  enumType | Set the Swift enum type.                                        |
+|  enumCase | Create a case.                                                  |
+|  ignore   | Prevents the property from being included in the generated code.|
+
+## Preparation
+| Key               | Description                                                                                                         |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------|
+| databaseKey       | Set the database key (default is the name of the member).                                                           |
+| preparation       | Set the database preparation for the given member. For example `preparation = string` will generate `$0.string(...)`|
+| enumName          | Generate a Swift enum for MySQL with accessors for allCases.                                                        |
+| enumType          | Set the Swift enum type.                                                                                            |
+| enumCase          | Create a case.                                                                                                      |
+| unique            | Whether or not the field is unique.                                                                                 |
+| foreignTable      | The table to use while configuring foreign ids. This field is only valid if `preparation` is set to `foreignId`.    |
+| foreignIdKey      | The foreign key to use while configuring foreign ids.                                                               |
+| foreignKeyName    | The foreign key's name.                                                                                             |
+| ignore            | Prevents the preparation from being included in the generated code.                                                 |
+| ignorePreparation | Prevents the preparation from being included in the generated preparation code.                                     |
+
+## RowConvertible
+| Key   | Description                                                      |
+| ------| ---------------------------------------------------------------- |
+| ignore| Prevents the property from being included in the generated code. |
+
+## NodeRepresentable
+| Key   | Description                                                      |
+| ------| ---------------------------------------------------------------- |
+| ignore| Prevents the property from being included in the generated code. |
+
+## JSONConvertible
+| Key   | Description                                                      |
+| ------| ---------------------------------------------------------------- |
+| ignore| Prevents the property from being included in the generated code. |
+
 ## Property Annotations
-### 'ignoreJSON'
-Prevents the property from being included in JSON in- and output.
+
+| Key   | Description                                                      |
+| ------| ---------------------------------------------------------------- |
+| ignore| Prevents the property from being included in the generated code. |
