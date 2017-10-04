@@ -42,9 +42,12 @@ This collection of templates is related to models and automating their conversio
 | ignoreNodeRepresentable| Prevents the property from being included in the generated code.|
 
 ## JSONConvertible
-| Key   | Description                                                      |
-| ------| ---------------------------------------------------------------- |
-| ignore| Prevents the property from being included in the generated code. |
+| Key                   | Description                                                     |
+| --------------------- | ----------------------------------------------------------------|
+| jsonKey               | Set the key for JSON (de)serialization.                         |
+| jsonValue             | Set the value for JSON serialization.                           |
+| ignore                | Prevents the property from being included in the generated code.|
+| ignoreJSONConvertible | Prevents the property from being included in the generated code.|
 
 ## Property Annotations
 
