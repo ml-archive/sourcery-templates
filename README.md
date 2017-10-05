@@ -37,6 +37,8 @@ final class User: Model {
 }
 ```
 
+#### Annotations
+
 |  Key        | Description                                                            |
 | ----------- | -----------------------------------------------------------------------|
 |  `enumName` | Generate a Swift enum for MySQL with accessors for a list of all cases.|
@@ -83,6 +85,8 @@ extension User: Preparation {
 }
 
 ```
+
+#### Annotations
 
 | Key                 | Description                                                                                                                       |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------|
@@ -134,6 +138,8 @@ extension User: RowConvertible {
 }
 ```
 
+#### Annotations
+
 | Key                    | Description                                                                       |
 | ---------------------- | --------------------------------------------------------------------------------- |
 | `databaseKey`          | Set the database key (default is the name of the member).                         |
@@ -174,6 +180,8 @@ extension User: NodeRepresentable {
 	}
 }
 ```
+
+#### Annotations
 
 | Key                       | Description                                                                         |
 | ------------------------- | ------------------------------------------------------------------------------------|
@@ -222,6 +230,8 @@ extension User: JSONConvertible {
 extension User: ResponseRepresentable {}
 ```
 
+#### Annotations
+
 | Key                     | Description                                                                       |
 | ----------------------- | ----------------------------------------------------------------------------------|
 | `jsonValue`             | Set the value for JSON serialization.                                             |
@@ -234,6 +244,8 @@ These templates are related to unit testing with XCTest.
 ## LinuxMain
 Generates a static `allTests` for every `XCTestCase` and registers them in the `LinuxMain.swift`.
 
+#### Annotations
+
 | Key                   | Description                                                       |
 | ----------------------| ----------------------------------------------------------------- |
 | `excludeFromLinuxMain`| Prevents the test case from being included in the generated code. |
@@ -242,6 +254,9 @@ Generates a static `allTests` for every `XCTestCase` and registers them in the `
 These templates are for controllers and route collections.
 
 ## Route collection
+
+#### Annotations
+
 | Key         | Description |
 | ------------| ----------- |
 | `controller`|             |
