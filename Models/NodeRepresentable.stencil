@@ -14,27 +14,27 @@ import {{ var }}
 {% endif %}
 
 extension {{ type.localName }}: NodeRepresentable {
-	internal enum NodeKeys: String {
-		{% for var in type.storedVariables|!annotated:"ignore" %}
-		case {{ var.annotations.nodeKey|default:var.name }}
-		{% endfor %}
-	}
+    internal enum NodeKeys: String {
+        {% for var in type.storedVariables|!annotated:"ignore" %}
+        case {{ var.annotations.nodeKey|default:var.name }}
+        {% endfor %}
+    }
 
-	// MARK: - NodeRepresentable ({{ type.name }})
-	func makeNode(in context: Context?) throws -> Node {
-		var node = Node([:])
+    // MARK: - NodeRepresentable ({{ type.name }})
+    func makeNode(in context: Context?) throws -> Node {
+        var node = Node([:])
 
-		try node.set({{ type.name }}.idKey, id)
-		{% for var in type.storedVariables|!annotated:"ignore" %}
-		try node.set(NodeKeys.{{ var.annotations.nodeKey|default:var.name }}.rawValue, {{ var.annotations.nodeValue|default:var.name }})
-		{% endfor %}
-		{% if type.based.Timestampable %}
-		try node.set({{ type.localName }}.createdAtKey, createdAt)
-		try node.set({{ type.localName }}.updatedAtKey, updatedAt)
-		{% endif %}
+        try node.set({{ type.name }}.idKey, id)
+        {% for var in type.storedVariables|!annotated:"ignore" %}
+        try node.set(NodeKeys.{{ var.annotations.nodeKey|default:var.name }}.rawValue, {{ var.annotations.nodeValue|default:var.name }})
+        {% endfor %}
+        {% if type.based.Timestampable %}
+        try node.set({{ type.localName }}.createdAtKey, createdAt)
+        try node.set({{ type.localName }}.updatedAtKey, updatedAt)
+        {% endif %}
 
-		return node
-	}
+        return node
+    }
 }
 
 // sourcery:end
