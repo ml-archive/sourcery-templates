@@ -5,6 +5,8 @@
 This collection of templates is related to models and automating their conversions to common Vapor types.
 
 ## Model
+Automatically generates an initializer and an enum for MySQL enum types.
+
 |  Key        | Description                                                            |
 | ----------- | -----------------------------------------------------------------------|
 |  `enumName` | Generate a Swift enum for MySQL with accessors for a list of all cases.|
@@ -13,6 +15,8 @@ This collection of templates is related to models and automating their conversio
 |  `ignore`   | Prevents the property from being included in the generated code.       |
 
 ## Preparation
+Generates a list of database keys, automates `prepare` and `revert` functions.
+
 | Key                 | Description                                                                                                                       |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------|
 | `databaseKey`       | Set the database key (default is the name of the member).                                                                         |
@@ -28,6 +32,8 @@ This collection of templates is related to models and automating their conversio
 | `ignorePreparation` | Prevents the preparation from being included in the generated `Preparation` code.                                                 |
 
 ## RowConvertible
+Automates `init (row: Row)` and `makeRow` boilerplate.
+
 | Key                    | Description                                                                       |
 | ---------------------- | --------------------------------------------------------------------------------- |
 | `databaseKey`          | Set the database key (default is the name of the member).                         |
@@ -35,6 +41,8 @@ This collection of templates is related to models and automating their conversio
 | `ignoreRowConvertible` | Prevents the property from being included in the generated `RowConvertible` code. |
 
 ## NodeRepresentable
+Generates a list of node keys and `makeNode(in context: Context?)`.
+
 | Key                       | Description                                                                         |
 | ------------------------- | ------------------------------------------------------------------------------------|
 | `nodeKey`                 | Set the key for node (de)serialization.                                             |
@@ -42,14 +50,30 @@ This collection of templates is related to models and automating their conversio
 | `ignoreNodeRepresentable` | Prevents the property from being included in the generated `NodeRepresentable` code.|
 
 ## JSONConvertible
+Generates a list of JSON keys, `init(json: JSON)` and `makeJSON`.
+
 | Key                     | Description                                                                       |
 | ----------------------- | ----------------------------------------------------------------------------------|
 | `jsonValue`             | Set the value for JSON serialization.                                             |
 | `ignore`                | Prevents the property from being included in the generated code.                  |
 | `ignoreJSONConvertible` | Prevents the property from being included in the generated `JSONConvertible` code.|
 
-## Property Annotations
+# Tests
+The templates are related to unit testing with XCTest.
 
-| Key      | Description                                                      |
-| -------- | ---------------------------------------------------------------- |
-| `ignore` | Prevents the property from being included in the generated code. |
+## LinuxMain
+Generates a static `allTests` for every `XCTestCase` and registers them in the `LinuxMain.swift`.
+
+| Key                   | Description                                                       |
+| ----------------------| ----------------------------------------------------------------- |
+| `excludeFromLinuxMain`| Prevents the test case from being included in the generated code. |
+
+## 🏆 Credits
+
+This package is developed and maintained by the Vapor team at [Nodes](https://www.nodesagency.com).
+The package owner for this project is [Steffen](https://github.com/steffendsommer).
+
+
+## 📄 License
+
+This package is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
