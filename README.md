@@ -7,6 +7,36 @@ This collection of templates is related to models and automating their conversio
 ## Model
 Automatically generates an initializer and an enum for MySQL enum types.
 
+Example:
+```swift
+final class User: Model {
+	var name: String
+	var age: Int?
+}
+```
+
+Becomes:
+```swift
+// sourcery: model
+final class User: Model {
+	var name: String
+	var age: Int?
+
+// sourcery:inline:auto:User.Models
+    let storage = Storage()
+
+
+    internal init(
+        name: String,
+        age: Int? = nil
+    ) {
+        self.name = name
+        self.age = age
+    }
+// sourcery:end
+}
+```
+
 |  Key        | Description                                                            |
 | ----------- | -----------------------------------------------------------------------|
 |  `enumName` | Generate a Swift enum for MySQL with accessors for a list of all cases.|
@@ -16,6 +46,43 @@ Automatically generates an initializer and an enum for MySQL enum types.
 
 ## Preparation
 Generates a list of database keys, automates `prepare` and `revert` functions.
+
+Example:
+```swift
+final class User: Model {
+	var name: String
+	var age: Int?
+}
+```
+
+Becomes:
+```swift
+import Vapor
+import Fluent
+
+extension User: Preparation {
+	internal enum DatabaseKeys {
+		static let id = User.idKey
+		static let name = "name"
+		static let age = "age"
+	}
+
+	// MARK: - Preparations (User)
+	internal static func prepare(_ database: Database) throws {
+		try database.create(self) {
+			$0.id()
+			$0.string(DatabaseKeys.name)
+			$0.int(DatabaseKeys.age, optional: true)
+		}
+
+	}
+
+	internal static func revert(_ database: Database) throws {
+		try database.delete(self)
+	}
+}
+
+```
 
 | Key                 | Description                                                                                                                       |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------|
@@ -34,6 +101,39 @@ Generates a list of database keys, automates `prepare` and `revert` functions.
 ## RowConvertible
 Automates `init (row: Row)` and `makeRow` boilerplate.
 
+Example:
+```swift
+final class User: Model {
+	var name: String
+	var age: Int?
+}
+```
+
+Becomes:
+```swift
+import Vapor
+import Fluent
+
+extension User: RowConvertible {
+	// MARK: - RowConvertible (User)
+	convenience internal init (row: Row) throws {
+		try self.init(
+			name: row.get(DatabaseKeys.name),
+			age: row.get(DatabaseKeys.age)
+		)
+	}
+
+	internal func makeRow() throws -> Row {
+		var row = Row()
+
+		try row.set(DatabaseKeys.name, name)
+		try row.set(DatabaseKeys.age, age)
+
+		return row
+	}
+}
+```
+
 | Key                    | Description                                                                       |
 | ---------------------- | --------------------------------------------------------------------------------- |
 | `databaseKey`          | Set the database key (default is the name of the member).                         |
@@ -43,6 +143,38 @@ Automates `init (row: Row)` and `makeRow` boilerplate.
 ## NodeRepresentable
 Generates a list of node keys and `makeNode(in context: Context?)`.
 
+Example:
+```swift
+final class User: Model {
+	var name: String
+	var age: Int?
+}
+```
+
+Becomes:
+```swift
+import Vapor
+import Fluent
+
+extension User: NodeRepresentable {
+	internal enum NodeKeys: String {
+		case name
+		case age
+	}
+
+	// MARK: - NodeRepresentable (User)
+	func makeNode(in context: Context?) throws -> Node {
+		var node = Node([:])
+
+		try node.set(User.idKey, id)
+		try node.set(NodeKeys.name.rawValue, name)
+		try node.set(NodeKeys.age.rawValue, age)
+
+		return node
+	}
+}
+```
+
 | Key                       | Description                                                                         |
 | ------------------------- | ------------------------------------------------------------------------------------|
 | `nodeKey`                 | Set the key for node (de)serialization.                                             |
@@ -51,6 +183,44 @@ Generates a list of node keys and `makeNode(in context: Context?)`.
 
 ## JSONConvertible
 Generates a list of JSON keys, `init(json: JSON)` and `makeJSON`.
+
+Example:
+```swift
+final class User: Model {
+	var name: String
+	var age: Int?
+}
+```
+
+Becomes:
+```swift
+extension User: JSONConvertible {
+    internal enum JSONKeys: String {
+        case name
+        case age
+    }
+
+    // MARK: - JSONConvertible (User)
+    internal convenience init(json: JSON) throws {
+        try self.init(
+            name: json.get(JSONKeys.name.rawValue),
+            age: json.get(JSONKeys.age.rawValue)
+        )
+    }
+
+    internal func makeJSON() throws -> JSON {
+        var json = JSON()
+
+        try json.set(User.idKey, id)
+        try json.set(JSONKeys.name.rawValue, name)
+        try json.set(JSONKeys.age.rawValue, age)
+
+        return json
+    }
+}
+
+extension User: ResponseRepresentable {}
+```
 
 | Key                     | Description                                                                       |
 | ----------------------- | ----------------------------------------------------------------------------------|
