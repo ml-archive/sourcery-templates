@@ -59,7 +59,7 @@ Generates a list of JSON keys, `init(json: JSON)` and `makeJSON`.
 | `ignoreJSONConvertible` | Prevents the property from being included in the generated `JSONConvertible` code.|
 
 # Tests
-The templates are related to unit testing with XCTest.
+These templates are related to unit testing with XCTest.
 
 ## LinuxMain
 Generates a static `allTests` for every `XCTestCase` and registers them in the `LinuxMain.swift`.
@@ -67,6 +67,14 @@ Generates a static `allTests` for every `XCTestCase` and registers them in the `
 | Key                   | Description                                                       |
 | ----------------------| ----------------------------------------------------------------- |
 | `excludeFromLinuxMain`| Prevents the test case from being included in the generated code. |
+
+# Controllers
+These templates are for controllers and route collections.
+
+## Route collection
+| Key         | Description |
+| ------------| ----------- |
+| `controller`|             |
 
 ## 🏆 Credits
 
