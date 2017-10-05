@@ -27,7 +27,7 @@ Generates a list of database keys, automates `prepare` and `revert` functions.
 | `unique`            | Whether or not the field is unique.                                                                                               |
 | `foreignTable`      | The table to use while configuring foreign ids. This field is only valid if `preparation` is set to `foreignId`.                  |
 | `foreignIdKey`      | The foreign key to use while configuring foreign ids.                                                                             |
-| `foreignKeyName`    | The foreign key's name. _note_:  this annotation should only be used when you run into Fluent issues with the auto-generated names|
+| `foreignKeyName`    | The foreign key's name. _note_:  this annotation should only be used when you run into Fluent issues with the auto-generated names.|
 | `ignore`            | Prevents the preparation from being included in the generated code.                                                               |
 | `ignorePreparation` | Prevents the preparation from being included in the generated `Preparation` code.                                                 |
 
