@@ -1,0 +1,11 @@
+{% for enum in types.enums|!annotated:"ignore" where arguments.enumOptOut or enum.annotations.enum %}
+
+extension {{ enum.name }} {
+    static var allCases: [{{ enum.name }}] = [
+        {% for case in enum.cases %}
+            .{{ case.name }},
+        {% endfor %}
+    ]
+}
+
+{% endfor %}
