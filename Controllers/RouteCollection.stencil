@@ -11,7 +11,7 @@ final class {{ type.localName|replace:"Controller","" }}Routes: RouteCollection 
 
     internal init(
         controller: {{ type.localName }},
-        middlewares: [Middleware]
+        middlewares: [Middleware] = []
     ) {
         self.controller = controller
         self.middlewares = middlewares
