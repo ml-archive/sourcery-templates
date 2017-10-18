@@ -20,7 +20,7 @@ internal protocol {{ type.localName }}FieldsType {
 {% endfor %}
 }
 
-extension {{ type.localName }} {
+extension {{ type.localName }}: {{ type.localName }}FieldsType {
 {% for variable in type.variables where variable.typeName|hasPrefix:"FormField<" %}
 
     var {{ variable.name|replace:"Field",""}}: {{variable.typeName.name|replace:"FormField<",""|replace:">",""}}? {
