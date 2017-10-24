@@ -7,7 +7,7 @@
 
 [Sourcery](https://github.com/krzysztofzablocki/Sourcery) stencil files for generating Vapor 2 boilerplate.
 
-# Introduction
+## Introduction
 
 Writing Vapor apps usually involves a lot of boilerplate code and since Vapor doesn't have any convenience for this in the current toolbox, we decided to look at metaprogramming to fix this issue. This repository contains the templates we have found useful to have in our toolbelt when developing Vapor projects. The overall guidelines for the templates are:
 
@@ -20,31 +20,35 @@ Writing Vapor apps usually involves a lot of boilerplate code and since Vapor do
 
 This repo contains a Sourcery configuration file (`.sourcery.yml`) which can be copied/moved/linked into the root of your project. Using this configuration all Sourcery-generated files will be created in `Sourcers/App/Generated/`, but please note that this `Generated` folder needs to be created manually before running Sourcery.
 
-# Table of Contents
+## Table of Contents
 
 - [Introduction](#introduction)
   - [Important notice](#important-notice)
 - [Models](#models)
   - [Model](#model)
-    - [Annotations](#annotations)
   - [Preparation](#preparation)
-    - [Annotations](#annotations-1)
+    - [Annotations](#annotations)
   - [RowConvertible](#rowconvertible)
-    - [Annotations](#annotations-2)
+    - [Annotations](#annotations-1)
   - [NodeRepresentable](#noderepresentable)
-    - [Annotations](#annotations-3)
+    - [Annotations](#annotations-2)
   - [JSONConvertible](#jsonconvertible)
+    - [Annotations](#annotations-3)
+- [Controllers](#controllers)
+  - [RouteCollection](#routecollection)
     - [Annotations](#annotations-4)
 - [Tests](#tests)
   - [LinuxMain](#linuxmain)
     - [Annotations](#annotations-5)
-- [Controllers](#controllers)
-  - [RouteCollection](#routecollection)
+- [General](#general)
+  - [Enums](#enums)
     - [Annotations](#annotations-6)
+- [Configuration](#configuration)
+  - [Options](#options)
 - [Credits](#credits)
 - [License](#license)
 
-# Models
+## Models
 This collection of templates is related to models and automating their conversions to common Vapor types. To make Sourcery pick up your model, annotate your model with `model` :
 
 ```swift
@@ -54,7 +58,7 @@ final class User: Model {
 }
 ```
 
-## Model
+### Model
 Automatically generates an initializer and an enum for MySQL enum types.
 
 Example:
@@ -88,16 +92,7 @@ final class User: Model {
 }
 ```
 
-#### Annotations
-
-| Key        | Description                              |
-| ---------- | ---------------------------------------- |
-| `enumName` | Generate a Swift enum for MySQL with accessors for a list of all cases. |
-| `enumType` | Set the Swift enum type.                 |
-| `enumCase` | Create a case.                           |
-| `ignore`   | Prevents the property from being included in the generated code. |
-
-## Preparation
+### Preparation
 Generates a list of database keys, automates `prepare` and `revert` functions.
 
 Example:
@@ -154,7 +149,7 @@ extension User: Preparation {
 | `ignore`            | Prevents the preparation from being included in the generated code. |
 | `ignorePreparation` | Prevents the preparation from being included in the generated `Preparation` code. |
 
-## RowConvertible
+### RowConvertible
 Automates `init (row: Row)` and `makeRow` boilerplate.
 
 Example:
@@ -199,7 +194,7 @@ extension User: RowConvertible {
 | `ignore`               | Prevents the property from being included in the generated code. |
 | `ignoreRowConvertible` | Prevents the property from being included in the generated `RowConvertible` code. |
 
-## NodeRepresentable
+### NodeRepresentable
 Generates a list of node keys and `makeNode(in context: Context?)`.
 
 Example:
@@ -243,7 +238,7 @@ extension User: NodeRepresentable {
 | `ignore`                  | Prevents the property from being included in the generated code. |
 | `ignoreNodeRepresentable` | Prevents the property from being included in the generated `NodeRepresentable` code. |
 
-## JSONConvertible
+### JSONConvertible
 Generates a list of JSON keys, `init(json: JSON)` and `makeJSON`.
 
 Example:
@@ -293,54 +288,7 @@ extension User: ResponseRepresentable {}
 | `ignore`                | Prevents the property from being included in the generated code. |
 | `ignoreJSONConvertible` | Prevents the property from being included in the generated `JSONConvertible` code. |
 
-# Tests
-These templates are related to unit testing with XCTest.
-
-## LinuxMain
-Generates a static `allTests` for every `XCTestCase` and registers them in the `LinuxMain.swift`.
-
-Example:
-
-```swift
-class UserControllerTests: TestCase {
-    func testShowOneUser() throws {}
-    func testShowAllusers() throws {}
-}
-```
-
-Becomes:
-
-```swift
-#if os(Linux)
-
-import XCTest
-@testable import MyProjectTests
-
-// sourcery:inline:auto:LinuxMain
-
-extension UserControllerTests {
-  static var allTests = [
-    ("testShowOneUser", testShowOneUser),
-    ("testShowAllusers", testShowAllusers),
-  ]
-}
-
-XCTMain([
-  testCase(UserControllerTests.allTests)
-])
-
-// sourcery:end
-
-#endif
-```
-
-#### Annotations
-
-| Key                    | Description                              |
-| ---------------------- | ---------------------------------------- |
-| `excludeFromLinuxMain` | Prevents the test case from being included in the generated code. |
-
-# Controllers
+## Controllers
 These templates are for controllers and route collections. To make Sourcery pick up your controller, annotate your controller with `controller` :
 
 ```swift
@@ -350,7 +298,7 @@ final class UserController {
 }
 ```
 
-## RouteCollection
+### RouteCollection
 
 Generates route collection for controller logic.
 
@@ -408,6 +356,90 @@ final class UserRoutes: RouteCollection {
 | `method` | The method of the route.                 |
 | `path`   | The path for the route.                  |
 
+## Tests
+These templates are related to unit testing with XCTest.
+
+### LinuxMain
+Generates a static `allTests` for every `XCTestCase` and registers them in the `LinuxMain.swift`.
+
+Example:
+
+```swift
+class UserControllerTests: TestCase {
+    func testShowOneUser() throws {}
+    func testShowAllusers() throws {}
+}
+```
+
+Becomes:
+
+```swift
+#if os(Linux)
+
+import XCTest
+@testable import MyProjectTests
+
+// sourcery:inline:auto:LinuxMain
+
+extension UserControllerTests {
+  static var allTests = [
+    ("testShowOneUser", testShowOneUser),
+    ("testShowAllusers", testShowAllusers),
+  ]
+}
+
+XCTMain([
+  testCase(UserControllerTests.allTests)
+])
+
+// sourcery:end
+
+#endif
+```
+
+#### Annotations
+
+| Key                    | Description                              |
+| ---------------------- | ---------------------------------------- |
+| `excludeFromLinuxMain` | Prevents the test case from being included in the generated code. |
+
+## General
+
+These templates are not related to any specific part of your Vapor project.
+
+### Enums
+
+Generates convenient accessors for getting a list of all cases. The MySQL preparation will use this as well.
+
+Example:
+
+```swift
+TODO
+```
+
+Becomes:
+
+```swift
+TODO
+```
+
+#### Annotations
+
+| Key      | Description                              |
+| -------- | ---------------------------------------- |
+| `enum`   | In the situation where enums has been globally turned off, this flag can be used to opt-in on specific enum types. |
+| `ignore` | Prevents the enum from being included in the generated code. |
+
+## Configuration
+
+Most of our templates are handled on a opt-in basis per type, however we also have some configurations which can be handled on a global level.
+
+### Options
+
+| Key          | Description                              |
+| ------------ | ---------------------------------------- |
+| `enumOptOut` | Globally turns off generation of enum accessors. To enable for only some specific enum types, use the `enum` annotation. If this is not set all enums within the module will have convenience accessors created. |
+
 ## 🏆 Credits
 
 This package is developed and maintained by the Vapor team at [Nodes](https://www.nodesagency.com).
@@ -416,4 +448,4 @@ The package owner for this project is [Steffen](https://github.com/steffendsomme
 
 ## 📄 License
 
-This package is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+This package is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
