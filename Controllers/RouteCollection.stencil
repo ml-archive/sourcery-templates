@@ -1,11 +1,11 @@
 {# One route file per model #}
 
 {% for type in types.all|!protocol|annotated:"controller" %}
-// sourcery:file:Routes/{{ type.annotations.collection }}Routes/{{ type.annotations.collection }}Routes.generated.swift
+// sourcery:file:Routes/{{ type.localName|replace:"Controller","" }}Routes/{{ type.localName|replace:"Controller","" }}Routes.generated.swift
 
 import Vapor
 
-final class {{ type.annotations.collection }}Routes: RouteCollection {
+final class {{ type.localName|replace:"Controller","" }}Routes: RouteCollection {
     private let controller: {{ type.localName }}
     private let middlewares: [Middleware]
 
