@@ -2,7 +2,7 @@
 
 {% for type in types.based.Model|!protocol|annotated:"model" %}
     // sourcery:inline:auto:{{ type.name }}.Models
-    let storage = Storage()
+    internal let storage = Storage()
 
     internal init(
         {% for var in type.storedVariables|!annotated:"ignore" %}
