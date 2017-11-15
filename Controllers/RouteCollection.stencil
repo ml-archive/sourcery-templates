@@ -13,7 +13,7 @@ extension {{ type.localName }}: RouteCollection {
             routes.{{ func.annotations.method }}("{{ func.annotations.path }}", handler: {{ func.shortName }})
             {% endfor %}
         }
-    }    
+    }
 }
 
 // sourcery:end
