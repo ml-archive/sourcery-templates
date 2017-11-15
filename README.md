@@ -147,10 +147,7 @@ extension User: Preparation {
 | Key                 | Description                              |
 | ------------------- | ---------------------------------------- |
 | `databaseKey`       | Set the database key (default is the name of the member). |
-| `preparation`       | Set the database preparation type for the given member. For example `preparation = string` will generate `$0.string(...)` |
-| `enumName`          | Generate a Swift enum for MySQL with accessors for a list of all cases. |
-| `enumType`          | Set the Swift enum type.                 |
-| `enumCase`          | Create a case.                           |
+| `preparation`       | Set the database preparation type for the given member. For example `preparation = string` will generate `$0.string(...)` |                       |
 | `unique`            | Whether or not the field is unique.      |
 | `foreignTable`      | The table to use while configuring foreign ids. This field is only valid if `preparation` is set to `foreignId`. |
 | `foreignIdKey`      | The foreign key to use while configuring foreign ids. |
@@ -334,16 +331,6 @@ Becomes:
 
 ```swift
 final class UserRoutes: RouteCollection {
-    private let controller: UserController
-    private let middlewares: [Middleware]
-
-    internal init(
-        controller: UserController,
-        middlewares: [Middleware]
-    ) {
-        self.controller = controller
-        self.middlewares = middlewares
-    }
 
     func build(_ builder: RouteBuilder) throws {
         builder.grouped("users").group(middleware: middlewares) { routes in
@@ -423,13 +410,24 @@ Generates convenient accessors for getting a list of all cases. The MySQL prepar
 Example:
 
 ```swift
-TODO
+// sourcery: enum
+enum TestEnum: String, RawStringConvertible {
+	case a, b, c
+}
 ```
 
 Becomes:
 
 ```swift
-TODO
+extension TestEnum {
+    static var all: [TestEnum] = [
+            .a,
+            .b,
+            .c,
+    ]
+
+    static let allRaw = TestEnum.all.map { $0.rawValue }
+}
 ```
 
 #### Annotations
