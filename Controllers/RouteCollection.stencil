@@ -1,30 +1,20 @@
 {# One route file per model #}
 
 {% for type in types.all|!protocol|annotated:"controller" %}
-// sourcery:file:Routes/{{ type.localName|replace:"Controller","" }}Routes/{{ type.localName|replace:"Controller","" }}Routes.generated.swift
+// sourcery:file:Routes/{{ type.localName }}/{{ type.localName }}+RouteCollection.generated.swift
 
 import Vapor
 
-final class {{ type.localName|replace:"Controller","" }}Routes: RouteCollection {
-    private let controller: {{ type.localName }}
-    private let middlewares: [Middleware]
-
-    internal init(
-        controller: {{ type.localName }},
-        middlewares: [Middleware] = []
-    ) {
-        self.controller = controller
-        self.middlewares = middlewares
-    }
-
+extension {{ type.localName }}: RouteCollection {
     func build(_ builder: RouteBuilder) throws {
-        builder.grouped("{{ type.annotations.group }}").group(middleware: middlewares) { routes in
+        builder.group("{{ type.annotations.group }}") { routes in
             {% for func in type.methods where func|annotated:"route" %}
             // {{ func.annotations.method|uppercase }} /{{ type.annotations.group }}{{ func.annotations.path }}
-            routes.{{ func.annotations.method }}("{{ func.annotations.path }}", handler: controller.{{ func.shortName }})
+            routes.{{ func.annotations.method }}("{{ func.annotations.path }}", handler: {{ func.shortName }})
             {% endfor %}
         }
     }
 }
+
 // sourcery:end
 {% endfor %}
