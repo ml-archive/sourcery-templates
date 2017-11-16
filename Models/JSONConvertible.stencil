@@ -16,7 +16,7 @@ import {{ var }}
 extension {{ type.localName }}: JSONConvertible {
     internal enum JSONKeys: String {
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSONConvertible" %}
-        case {% if var.annotations.jsonKey %}{{ var.annotations.jsonKey }}{% else %}{{ var.name }}{% endif %}
+        static let {{ var.annotations.jsonKey|default:var.name }} = "{{ var.annotations.jsonKey|default:var.name }}"
         {% endfor %}
     }
 
@@ -24,7 +24,7 @@ extension {{ type.localName }}: JSONConvertible {
     internal convenience init(json: JSON) throws {
         try self.init(
             {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSONConvertible" %}
-            {{ var.name }}: json.get(JSONKeys.{{ var.annotations.jsonKey|default:var.name }}.rawValue){% if not forloop.last %},{% endif %}
+            {{ var.name }}: json.get(JSONKeys.{{ var.annotations.jsonKey|default:var.name }}){% if not forloop.last %},{% endif %}
             {% endfor %}
         )
     }
@@ -34,7 +34,7 @@ extension {{ type.localName }}: JSONConvertible {
 
         try json.set({{ type.name }}.idKey, id)
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSONConvertible" %}
-        try json.set(JSONKeys.{{ var.annotations.jsonKey|default:var.name }}.rawValue, {{ var.annotations.jsonValue|default:var.name}})
+        try json.set(JSONKeys.{{ var.annotations.jsonKey|default:var.name }}, {{ var.annotations.jsonValue|default:var.name}})
         {% endfor %}
 
         return json

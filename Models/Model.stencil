@@ -2,18 +2,7 @@
 
 {% for type in types.based.Model|!protocol|annotated:"model" %}
     // sourcery:inline:auto:{{ type.name }}.Models
-    let storage = Storage()
-
-    {% for var in type.storedVariables|!annotated:"ignore"|annotated:"enumName" %}
-    enum {{ var.annotations.enumName }}: {{ var.annotations.enumType }}, RawStringConvertible {
-        {% for case in var.annotations.enumCase %}
-        case {{ case }}
-        {% endfor %}
-
-        static let all = [{% for case in var.annotations.enumCase %}{{ var.annotations.enumName }}.{{ case }}{% if not forloop.last %}, {% endif %}{% endfor %}]
-        static let allDescription = {{ var.annotations.enumName }}.all.map { $0.rawValue }
-    }
-    {% endfor %}
+    internal let storage = Storage()
 
     internal init(
         {% for var in type.storedVariables|!annotated:"ignore" %}
