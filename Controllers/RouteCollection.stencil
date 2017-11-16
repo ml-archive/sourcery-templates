@@ -2,7 +2,6 @@
 
 {% for type in types.all|!protocol|annotated:"controller" %}
 // sourcery:file:Routes/{{ type.localName }}/{{ type.localName }}+RouteCollection.generated.swift
-
 import Vapor
 
 extension {{ type.localName }}: RouteCollection {
