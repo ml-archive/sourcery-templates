@@ -2,7 +2,6 @@
 
 {% for type in types.based.Model|!protocol|annotated:"model"|!annotated:"ignoreNodeRepresentable" %}
 // sourcery:file:Models/{{ type.localName }}/{{ type.localName }}+NodeRepresentable.generated.swift
-
 import Vapor
 import Fluent
 {% if type.annotations.import %}
@@ -14,7 +13,7 @@ import {{ var }}
 {% endif %}
 
 extension {{ type.localName }}: NodeRepresentable {
-    internal enum NodeKeys: String {
+    internal enum NodeKeys {
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreNodeRepresentable" %}
         static let {{ var.annotations.nodeKey|default:var.name }} = "{{ var.annotations.nodeKey|default:var.name }}"
         {% endfor %}

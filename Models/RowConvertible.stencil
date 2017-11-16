@@ -2,7 +2,6 @@
 
 {% for type in types.based.Model|!protocol|annotated:"model"|!annotated:"ignoreRowConvertible" %}
 // sourcery:file:Models/{{ type.localName }}/{{ type.localName }}+RowConvertible.generated.swift
-
 import Vapor
 import Fluent
 
