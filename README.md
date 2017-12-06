@@ -288,11 +288,13 @@ extension User: ResponseRepresentable {}
 
 #### Annotations
 
-| Key                     | Description                              |
-| ----------------------- | ---------------------------------------- |
-| `jsonValue`             | Set the value for JSON serialization.    |
-| `ignore`                | Prevents the property from being included in the generated code. |
-| `ignoreJSONConvertible` | Prevents the property from being included in the generated `JSONConvertible` code. |
+| Key                       | Description                              |
+| ------------------------- | ---------------------------------------- |
+| `jsonValue`               | Set the value for JSON serialization.    |
+| `ignore`                  | Prevents the property from being included in the generated code. |
+| `ignoreJSONConvertible`   | Prevents the property from being included in the generated `JSONConvertible` code. |
+| `ignoreJSONInitializable` | Prevents the property from being included in the `init(json:)` method of the generated `JSONConvertible` code. |
+| `ignoreJSONRepresentable` | Prevents the property from being included in the `makeJSON()` method of the generated `JSONConvertible` code. |
 
 ## Controllers
 These templates are for controllers and route collections. To make Sourcery pick up your controller, annotate your controller with `controller` :
