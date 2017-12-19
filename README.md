@@ -147,7 +147,7 @@ extension User: Preparation {
 | Key                 | Description                              |
 | ------------------- | ---------------------------------------- |
 | `databaseKey`       | Set the database key (default is the name of the member). |
-| `preparation`       | Set the database preparation type for the given member. For example `preparation = string` will generate `$0.string(...)` |                       |
+| `preparation`       | Set the database preparation type for the given member. For example `preparation = string` will generate `$0.string(...)` |
 | `unique`            | Whether or not the field is unique.      |
 | `foreignTable`      | The table to use while configuring foreign ids. This field is only valid if `preparation` is set to `foreignId`. |
 | `foreignIdKey`      | The foreign key to use while configuring foreign ids. |
@@ -332,14 +332,13 @@ final class UserController {
 Becomes:
 
 ```swift
-final class UserRoutes: RouteCollection {
-
+extension UserController: RouteCollection {
     func build(_ builder: RouteBuilder) throws {
-        builder.grouped("users").group(middleware: middlewares) { routes in
+        builder.group("users") { routes in
             // GET /users/
-            routes.get("/", handler: controller.index)
+            routes.get("/", handler: index)
             // GET /users/:userId
-            routes.get("/:userId", handler: controller.show)
+            routes.get("/:userId", handler: show)
         }
     }
 }
