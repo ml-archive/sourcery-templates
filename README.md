@@ -147,7 +147,7 @@ extension User: Preparation {
 | Key                 | Description                              |
 | ------------------- | ---------------------------------------- |
 | `databaseKey`       | Set the database key (default is the name of the member). |
-| `preparation`       | Set the database preparation type for the given member. For example `preparation = string` will generate `$0.string(...)` |                       |
+| `preparation`       | Set the database preparation type for the given member. For example `preparation = string` will generate `$0.string(...)` |
 | `unique`            | Whether or not the field is unique.      |
 | `foreignTable`      | The table to use while configuring foreign ids. This field is only valid if `preparation` is set to `foreignId`. |
 | `foreignIdKey`      | The foreign key to use while configuring foreign ids. |
@@ -394,6 +394,8 @@ XCTMain([
 
 #endif
 ```
+
+Please note that if you're using one of the official templates ([api](https://github.com/vapor/api-template/blob/master/Tests/AppTests/Utilities.swift#L24) or [web](https://github.com/vapor/web-template/blob/master/Tests/AppTests/Utilities.swift#L23)) then you would need to make sure that the definition of `TestCase` gets excluded from `LinuxMain.swift` using the `excludeFromLinuxMain` annotation.
 
 #### Annotations
 
