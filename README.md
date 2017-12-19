@@ -395,6 +395,8 @@ XCTMain([
 #endif
 ```
 
+Please note that if you're using one of the official templates ([api](https://github.com/vapor/api-template/blob/master/Tests/AppTests/Utilities.swift#L24) or [web](https://github.com/vapor/web-template/blob/master/Tests/AppTests/Utilities.swift#L23)) then you would need to make sure that the definition of `TestCase` gets excluded from `LinuxMain.swift` using the `excludeFromLinuxMain` annotation.
+
 #### Annotations
 
 | Key                    | Description                              |
