@@ -26,7 +26,7 @@ Example:
 ```swift
 // sourcery: imports = JWTKeychain, imports = Storage
 final class User: Model {
-      ...
+    ...
 ```
 
 ## Table of Contents
@@ -63,7 +63,7 @@ This collection of templates is related to models and automating their conversio
 ```swift
 // sourcery: model
 final class User: Model {
-	// ...
+    // ...
 }
 ```
 
@@ -372,27 +372,20 @@ class UserControllerTests: TestCase {
 Becomes:
 
 ```swift
-#if os(Linux)
-
-import XCTest
-@testable import MyProjectTests
-
 // sourcery:inline:auto:LinuxMain
 
 extension UserControllerTests {
-  static var allTests = [
-    ("testShowOneUser", testShowOneUser),
-    ("testShowAllusers", testShowAllusers),
-  ]
+    static var allTests = [
+      ("testShowOneUser", testShowOneUser),
+      ("testShowAllusers", testShowAllusers),
+    ]
 }
 
 XCTMain([
-  testCase(UserControllerTests.allTests)
+    testCase(UserControllerTests.allTests)
 ])
 
 // sourcery:end
-
-#endif
 ```
 
 Please note that if you're using one of the official templates ([api](https://github.com/vapor/api-template/blob/master/Tests/AppTests/Utilities.swift#L24) or [web](https://github.com/vapor/web-template/blob/master/Tests/AppTests/Utilities.swift#L23)) then you would need to make sure that the definition of `TestCase` gets excluded from `LinuxMain.swift` using the `excludeFromLinuxMain` annotation.
