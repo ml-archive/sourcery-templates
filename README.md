@@ -409,7 +409,7 @@ Example:
 ```swift
 // sourcery: enum
 enum TestEnum: String, RawStringConvertible {
-	case a, b, c
+    case a, b, c
 }
 ```
 
@@ -418,9 +418,9 @@ Becomes:
 ```swift
 extension TestEnum {
     static var all: [TestEnum] = [
-            .a,
-            .b,
-            .c,
+        .a,
+        .b,
+        .c,
     ]
 
     static let allRaw = TestEnum.all.map { $0.rawValue }
