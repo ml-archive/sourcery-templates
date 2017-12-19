@@ -333,14 +333,13 @@ final class UserController {
 Becomes:
 
 ```swift
-final class UserRoutes: RouteCollection {
-
+extension UserController: RouteCollection {
     func build(_ builder: RouteBuilder) throws {
-        builder.grouped("users").group(middleware: middlewares) { routes in
+        builder.group("users") { routes in
             // GET /users/
-            routes.get("/", handler: controller.index)
+            routes.get("/", handler: index)
             // GET /users/:userId
-            routes.get("/:userId", handler: controller.show)
+            routes.get("/:userId", handler: show)
         }
     }
 }
