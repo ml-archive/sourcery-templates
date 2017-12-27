@@ -291,6 +291,7 @@ extension User: ResponseRepresentable {}
 
 | Key                       | Description                              |
 | ------------------------- | ---------------------------------------- |
+| `jsonKey`                 | Set the key for JSON serialization.      |
 | `jsonValue`               | Set the value for JSON serialization.    |
 | `ignore`                  | Prevents the property from being included in the generated code. |
 | `ignoreJSONConvertible`   | Prevents the property from being included in the generated `JSONConvertible` code. |
