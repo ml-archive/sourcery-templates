@@ -27,6 +27,7 @@ extension {{ type.localName }}: JSONConvertible {
             {% endfor %}
         )
     }
+    {% if type|!annotated:"ignoreJSONRepresentable" %}
 
     internal func makeJSON() throws -> JSON {
         var json = JSON()
@@ -38,6 +39,7 @@ extension {{ type.localName }}: JSONConvertible {
 
         return json
     }
+    {% endif %}
 }
 
 extension {{ type.localName }}: ResponseRepresentable {}
