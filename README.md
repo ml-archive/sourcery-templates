@@ -259,47 +259,59 @@ final class User: Model {
 
 Becomes:
 ```swift
-extension User: JSONConvertible {
-    internal enum JSONKeys: String {
-        case name
-        case age
+extension User {
+    internal enum JSONKeys {
+        static let name = "name"
+        static let age = "age"
     }
+}
 
-    // MARK: - JSONConvertible (User)
+// MARK: - JSONInitializable (User)
+
+extension AppUser: JSONInitializable {
     internal convenience init(json: JSON) throws {
-        try self.init(
-            name: json.get(JSONKeys.name.rawValue),
-            age: json.get(JSONKeys.age.rawValue)
+        let name: String = try json.get(JSONKeys.name)
+        let age: Int? = try json.get(JSONKeys.age)
+
+        self.init(
+            name: name,
+            age: age
         )
     }
+}
 
+// MARK: - JSONRepresentable (User)
+
+extension User: JSONRepresentable {
     internal func makeJSON() throws -> JSON {
         var json = JSON()
 
         try json.set(User.idKey, id)
-        try json.set(JSONKeys.name.rawValue, name)
-        try json.set(JSONKeys.age.rawValue, age)
+        try json.set(JSONKeys.name, name)
+        try json.set(JSONKeys.age, age)
 
         return json
     }
 }
+
+extension User: JSONConvertible {}
 
 extension User: ResponseRepresentable {}
 ```
 
 #### Annotations
 
-| Key                       | Description                              |
-| ------------------------- | ---------------------------------------- |
-| `jsonKey`                 | Set the key for JSON serialization.      |
-| `jsonValue`               | Set the value for JSON serialization.    |
+| Key                       | Description                                                  |
+| ------------------------- | ------------------------------------------------------------ |
+| `jsonKey`                 | Set the key for JSON serialization.                          |
+| `jsonValue`               | Set the value for JSON serialization.                        |
 | `ignore`                  | Prevents the property from being included in the generated code. |
-| `ignoreJSONConvertible`   | Prevents the property from being included in the generated `JSONConvertible` code. |
-| `ignoreJSONInitializable` | Prevents the property from being included in the `init(json:)` method of the generated `JSONConvertible` code. |
-| `ignoreJSONRepresentable` | Prevents the property from being included in the `makeJSON()` method of the generated `JSONConvertible` code. |
+| `ignoreJSONConvertible`   | **On type:** Prevents any JSON-related code to be generated. **On property:** Prevents the property from being included in the generated `JSONConvertible` code. |
+| `ignoreJSONInitializable` | **On type**: Prevents the `JSONInitializable` extension to be generated. **On property:** Prevents the property from being included in the `JSONInitializable` extension. |
+| `ignoreJSONRepresentable` | **On type:** Prevents the `JSONRepresentable` extension to be generated. **On property:** Prevents the property from being included in the `JSONRepresentable` extension. |
 
 ## Controllers
-These templates are for controllers and route collections. To make Sourcery pick up your controller, annotate your controller with `controller` :
+These templates are for controllers and route collections. To make Sourcery pick up your controller, annotate your controller with `controller`:
 
 ```swift
 // sourcery: controller
