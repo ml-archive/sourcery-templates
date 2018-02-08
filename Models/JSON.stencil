@@ -1,7 +1,7 @@
 {# One JSON file per model #}
 
 {% for type in types.based.Model|!protocol|annotated:"model"|!annotated:"ignoreJSONConvertible" %}
-// sourcery:file:Models/{{ type.localName }}/{{ type.localName }}+JSONConvertible.generated.swift
+// sourcery:file:Models/{{ type.localName }}/{{ type.localName }}+JSON.generated.swift
 import Vapor
 import Fluent
 {% if type.annotations.import %}
@@ -12,14 +12,19 @@ import {{ var }}
 {% endfor %}
 {% endif %}
 
-extension {{ type.localName }}: JSONConvertible {
+
+extension {{ type.localName }} {
     internal enum JSONKeys {
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSONConvertible" %}
         static let {{ var.annotations.jsonKey|default:var.name }} = "{{ var.annotations.jsonKey|default:var.name }}"
         {% endfor %}
     }
+}
 
-    // MARK: - JSONConvertible ({{ type.name }})
+{% if type|!annotated:"ignoreJSONInitializable" %}
+// MARK: - JSONInitializable ({{ type.name }})
+
+extension {{ type.localName }}: JSONInitializable {
     internal convenience init(json: JSON) throws {
         try self.init(
             {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSONConvertible"|!annotated:"ignoreJSONInitializable" %}
@@ -27,8 +32,13 @@ extension {{ type.localName }}: JSONConvertible {
             {% endfor %}
         )
     }
-    {% if type|!annotated:"ignoreJSONRepresentable" %}
+}
+{% endif %}
 
+{% if type|!annotated:"ignoreJSONRepresentable" %}
+// MARK: - JSONRepresentable ({{ type.name }})
+
+extension {{ type.localName }}: JSONRepresentable {
     internal func makeJSON() throws -> JSON {
         var json = JSON()
 
@@ -39,8 +49,12 @@ extension {{ type.localName }}: JSONConvertible {
 
         return json
     }
-    {% endif %}
 }
+{% endif %}
+
+{% if type|!annotated:"ignoreJSONInitializable"|!annotated:"ignoreJSONRepresentable" %}
+extension {{ type.localName }}: JSONConvertible {}
+{% endif %}
 
 extension {{ type.localName }}: ResponseRepresentable {}
 // sourcery:end
