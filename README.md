@@ -268,11 +268,14 @@ extension User {
 
 // MARK: - JSONInitializable (User)
 
-extension User: JSONInitializable {
+extension AppUser: JSONInitializable {
     internal convenience init(json: JSON) throws {
-        try self.init(
-            name: json.get(JSONKeys.name),
-            age: json.get(JSONKeys.age)
+        let name: String = try json.get(JSONKeys.name)
+        let age: Int? = try json.get(JSONKeys.age)
+
+        self.init(
+            name: name,
+            age: age
         )
     }
 }
