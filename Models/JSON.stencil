@@ -12,7 +12,6 @@ import {{ var }}
 {% endfor %}
 {% endif %}
 
-
 extension {{ type.localName }} {
     internal enum JSONKeys {
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSONConvertible" %}

@@ -311,7 +311,7 @@ extension User: ResponseRepresentable {}
 | `ignoreJSONRepresentable` | **On type:** Prevents the `JSONRepresentable` extension to be generated. **On property:** Prevents the property from being included in the `JSONRepresentable` extension. |
 
 ## Controllers
-These templates are for controllers and route collections. To make Sourcery pick up your controller, annotate your controller with `controller` :
+These templates are for controllers and route collections. To make Sourcery pick up your controller, annotate your controller with `controller`:
 
 ```swift
 // sourcery: controller
