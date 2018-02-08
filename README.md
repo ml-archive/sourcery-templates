@@ -305,6 +305,7 @@ extension User: ResponseRepresentable {}
 | ------------------------- | ------------------------------------------------------------ |
 | `jsonKey`                 | Set the key for JSON serialization.                          |
 | `jsonValue`               | Set the value for JSON serialization.                        |
+| `ignore`                  | Prevents the property from being included in the generated code. |
 | `ignoreJSONConvertible`   | **On type:** Prevents any JSON-related code to be generated. **On property:** Prevents the property from being included in the generated `JSONConvertible` code. |
 | `ignoreJSONInitializable` | **On type**: Prevents the `JSONInitializable` extension to be generated. **On property:** Prevents the property from being included in the `JSONInitializable` extension. |
 | `ignoreJSONRepresentable` | **On type:** Prevents the `JSONRepresentable` extension to be generated. **On property:** Prevents the property from being included in the `JSONRepresentable` extension. |
