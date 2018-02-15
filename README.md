@@ -1,5 +1,5 @@
 # Sourcery Templates ✨
-[![Swift Version](https://img.shields.io/badge/Swift-3.1-brightgreen.svg)](http://swift.org)
+[![Swift Version](https://img.shields.io/badge/Swift-3-brightgreen.svg)](http://swift.org)
 [![Vapor Version](https://img.shields.io/badge/Vapor-2-F6CBCA.svg)](http://vapor.codes)
 [![codebeat badge](https://codebeat.co/badges/52c2f960-625c-4a63-ae63-52a24d747da1)](https://codebeat.co/projects/github-com-nodes-vapor-sourcery-templates)
 [![Readme Score](http://readme-score-api.herokuapp.com/score.svg?url=https://github.com/nodes-vapor/sourcery-templates)](http://clayallsopp.github.io/readme-score?url=https://github.com/nodes-vapor/sourcery-templates)
@@ -26,7 +26,7 @@ Example:
 ```swift
 // sourcery: imports = JWTKeychain, imports = Storage
 final class User: Model {
-      ...
+    ...
 ```
 
 ## Table of Contents
@@ -63,7 +63,7 @@ This collection of templates is related to models and automating their conversio
 ```swift
 // sourcery: model
 final class User: Model {
-	// ...
+    // ...
 }
 ```
 
@@ -147,7 +147,8 @@ extension User: Preparation {
 | Key                 | Description                              |
 | ------------------- | ---------------------------------------- |
 | `databaseKey`       | Set the database key (default is the name of the member). |
-| `preparation`       | Set the database preparation type for the given member. For example `preparation = string` will generate `$0.string(...)` |                       |
+| `preparation`       | Set the database preparation type for the given member. For example `preparation = string` will generate `$0.string(...)` |
+| `length`            | Length of the field.                     |
 | `unique`            | Whether or not the field is unique.      |
 | `foreignTable`      | The table to use while configuring foreign ids. This field is only valid if `preparation` is set to `foreignId`. |
 | `foreignIdKey`      | The foreign key to use while configuring foreign ids. |
@@ -258,44 +259,59 @@ final class User: Model {
 
 Becomes:
 ```swift
-extension User: JSONConvertible {
-    internal enum JSONKeys: String {
-        case name
-        case age
+extension User {
+    internal enum JSONKeys {
+        static let name = "name"
+        static let age = "age"
     }
+}
 
-    // MARK: - JSONConvertible (User)
+// MARK: - JSONInitializable (User)
+
+extension AppUser: JSONInitializable {
     internal convenience init(json: JSON) throws {
-        try self.init(
-            name: json.get(JSONKeys.name.rawValue),
-            age: json.get(JSONKeys.age.rawValue)
+        let name: String = try json.get(JSONKeys.name)
+        let age: Int? = try json.get(JSONKeys.age)
+
+        self.init(
+            name: name,
+            age: age
         )
     }
+}
 
+// MARK: - JSONRepresentable (User)
+
+extension User: JSONRepresentable {
     internal func makeJSON() throws -> JSON {
         var json = JSON()
 
         try json.set(User.idKey, id)
-        try json.set(JSONKeys.name.rawValue, name)
-        try json.set(JSONKeys.age.rawValue, age)
+        try json.set(JSONKeys.name, name)
+        try json.set(JSONKeys.age, age)
 
         return json
     }
 }
+
+extension User: JSONConvertible {}
 
 extension User: ResponseRepresentable {}
 ```
 
 #### Annotations
 
-| Key                     | Description                              |
-| ----------------------- | ---------------------------------------- |
-| `jsonValue`             | Set the value for JSON serialization.    |
-| `ignore`                | Prevents the property from being included in the generated code. |
-| `ignoreJSONConvertible` | Prevents the property from being included in the generated `JSONConvertible` code. |
+| Key                       | Description                                                  |
+| ------------------------- | ------------------------------------------------------------ |
+| `jsonKey`                 | Set the key for JSON serialization.                          |
+| `jsonValue`               | Set the value for JSON serialization.                        |
+| `ignore`                  | Prevents the property from being included in the generated code. |
+| `ignoreJSONConvertible`   | **On type:** Prevents any JSON-related code to be generated. **On property:** Prevents the property from being included in the generated `JSONConvertible` code. |
+| `ignoreJSONInitializable` | **On type**: Prevents the `JSONInitializable` extension to be generated. **On property:** Prevents the property from being included in the `JSONInitializable` extension. |
+| `ignoreJSONRepresentable` | **On type:** Prevents the `JSONRepresentable` extension to be generated. **On property:** Prevents the property from being included in the `JSONRepresentable` extension. |
 
 ## Controllers
-These templates are for controllers and route collections. To make Sourcery pick up your controller, annotate your controller with `controller` :
+These templates are for controllers and route collections. To make Sourcery pick up your controller, annotate your controller with `controller`:
 
 ```swift
 // sourcery: controller
@@ -330,14 +346,13 @@ final class UserController {
 Becomes:
 
 ```swift
-final class UserRoutes: RouteCollection {
-
+extension UserController: RouteCollection {
     func build(_ builder: RouteBuilder) throws {
-        builder.grouped("users").group(middleware: middlewares) { routes in
+        builder.group("users") { routes in
             // GET /users/
-            routes.get("/", handler: controller.index)
+            routes.get("/", handler: index)
             // GET /users/:userId
-            routes.get("/:userId", handler: controller.show)
+            routes.get("/:userId", handler: show)
         }
     }
 }
@@ -370,28 +385,23 @@ class UserControllerTests: TestCase {
 Becomes:
 
 ```swift
-#if os(Linux)
-
-import XCTest
-@testable import MyProjectTests
-
 // sourcery:inline:auto:LinuxMain
 
 extension UserControllerTests {
-  static var allTests = [
-    ("testShowOneUser", testShowOneUser),
-    ("testShowAllusers", testShowAllusers),
-  ]
+    static var allTests = [
+      ("testShowOneUser", testShowOneUser),
+      ("testShowAllusers", testShowAllusers),
+    ]
 }
 
 XCTMain([
-  testCase(UserControllerTests.allTests)
+    testCase(UserControllerTests.allTests)
 ])
 
 // sourcery:end
-
-#endif
 ```
+
+Please note that if you're using one of the official templates ([api](https://github.com/vapor/api-template/blob/master/Tests/AppTests/Utilities.swift#L24) or [web](https://github.com/vapor/web-template/blob/master/Tests/AppTests/Utilities.swift#L23)) then you would need to make sure that the definition of `TestCase` gets excluded from `LinuxMain.swift` using the `excludeFromLinuxMain` annotation.
 
 #### Annotations
 
@@ -412,7 +422,7 @@ Example:
 ```swift
 // sourcery: enum
 enum TestEnum: String, RawStringConvertible {
-	case a, b, c
+    case a, b, c
 }
 ```
 
@@ -421,9 +431,9 @@ Becomes:
 ```swift
 extension TestEnum {
     static var all: [TestEnum] = [
-            .a,
-            .b,
-            .c,
+        .a,
+        .b,
+        .c,
     ]
 
     static let allRaw = TestEnum.all.map { $0.rawValue }

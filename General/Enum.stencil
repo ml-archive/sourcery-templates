@@ -56,7 +56,7 @@ extension RawStringConvertible  {
 extension {{ enum.name }} {
     static var all: [{{ enum.name }}] = [
         {% for case in enum.cases %}
-            .{{ case.name }},
+        .{{ case.name }},
         {% endfor %}
     ]
 
