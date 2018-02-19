@@ -15,7 +15,7 @@ import {{ var }}
 extension {{ type.localName }} {
     {{ type.accessLevel }} enum JSONKeys {
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSONConvertible" %}
-        static let {{ var.annotations.jsonKey|default:var.name }} = "{{ var.annotations.jsonKey|default:var.name }}"
+        {{ type.accessLevel }} static let {{ var.annotations.jsonKey|default:var.name }} = "{{ var.annotations.jsonKey|default:var.name }}"
         {% endfor %}
     }
 }
