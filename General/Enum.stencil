@@ -54,13 +54,13 @@ extension RawStringConvertible  {
 {% for enum in types.enums|!annotated:"ignore" where arguments.enumOptOut or enum.annotations.enum or enum.based.RawStringConvertible %}
 
 extension {{ enum.name }} {
-    static var all: [{{ enum.name }}] = [
+    {{ type.accessLevel }} static var all: [{{ enum.name }}] = [
         {% for case in enum.cases %}
         .{{ case.name }},
         {% endfor %}
     ]
 
-    static let allRaw = {{ enum.name }}.all.map { $0.rawValue }
+    {{ type.accessLevel }} static let allRaw = {{ enum.name }}.all.map { $0.rawValue }
 }
 
 {% endfor %}
