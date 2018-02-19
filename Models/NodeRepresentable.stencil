@@ -15,7 +15,7 @@ import {{ var }}
 extension {{ type.localName }}: NodeRepresentable {
     {{ type.accessLevel }} enum NodeKeys {
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreNodeRepresentable" %}
-        static let {{ var.annotations.nodeKey|default:var.name }} = "{{ var.annotations.nodeKey|default:var.name }}"
+        {{ type.accessLevel }} static let {{ var.annotations.nodeKey|default:var.name }} = "{{ var.annotations.nodeKey|default:var.name }}"
         {% endfor %}
     }
 
