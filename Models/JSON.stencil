@@ -13,7 +13,7 @@ import {{ var }}
 {% endif %}
 
 extension {{ type.localName }} {
-    internal enum JSONKeys {
+    {{ type.accessLevel }} enum JSONKeys {
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSONConvertible" %}
         static let {{ var.annotations.jsonKey|default:var.name }} = "{{ var.annotations.jsonKey|default:var.name }}"
         {% endfor %}
@@ -24,7 +24,7 @@ extension {{ type.localName }} {
 // MARK: - JSONInitializable ({{ type.name }})
 
 extension {{ type.localName }}: JSONInitializable {
-    internal convenience init(json: JSON) throws {
+    {{ type.accessLevel }} convenience init(json: JSON) throws {
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreJSONConvertible"|!annotated:"ignoreJSONInitializable" %}
         let {{var.name}}: {{var.typeName}} = try json.get(JSONKeys.{{ var.annotations.jsonKey|default:var.name }})
         {% endfor %}
@@ -42,7 +42,7 @@ extension {{ type.localName }}: JSONInitializable {
 // MARK: - JSONRepresentable ({{ type.name }})
 
 extension {{ type.localName }}: JSONRepresentable {
-    internal func makeJSON() throws -> JSON {
+    {{ type.accessLevel }} func makeJSON() throws -> JSON {
         var json = JSON()
 
         try json.set({{ type.name }}.idKey, id)

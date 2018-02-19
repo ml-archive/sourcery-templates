@@ -7,7 +7,7 @@ import Fluent
 
 extension {{ type.localName }}: RowConvertible {
     // MARK: - RowConvertible ({{ type.name }})
-    convenience internal init (row: Row) throws {
+    convenience {{ type.accessLevel }} init (row: Row) throws {
         try self.init(
             {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreRowConvertible" %}
             {{ var.name }}: row.get(DatabaseKeys.{{ var.annotations.databaseKey|default:var.name }}){% if not forloop.last %},{% endif %}
@@ -15,7 +15,7 @@ extension {{ type.localName }}: RowConvertible {
         )
     }
 
-    internal func makeRow() throws -> Row {
+    {{ type.accessLevel }} func makeRow() throws -> Row {
         var row = Row()
 
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreRowConvertible" %}
