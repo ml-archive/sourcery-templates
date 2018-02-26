@@ -2,9 +2,9 @@
 
 {% for type in types.based.Model|!protocol|annotated:"model" %}
     // sourcery:inline:auto:{{ type.name }}.Models
-    internal let storage = Storage()
+    {{ type.accessLevel }} let storage = Storage()
 
-    internal init(
+    {{ type.accessLevel }} init(
         {% for var in type.storedVariables|!annotated:"ignore" %}
         {{ var.name }}: {{ var.typeName.description }}{% if var.isOptional %} = nil{% endif %}{% if not forloop.last %},{% endif %}
         {% endfor %}

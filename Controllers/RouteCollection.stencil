@@ -5,7 +5,7 @@
 import Vapor
 
 extension {{ type.localName }}: RouteCollection {
-    func build(_ builder: RouteBuilder) throws {
+    {{ type.accessLevel }} func build(_ builder: RouteBuilder) throws {
         builder.group("{{ type.annotations.group }}") { routes in
             {% for func in type.methods where func|annotated:"route" %}
             // {{ func.annotations.method|uppercase }} /{{ type.annotations.group }}{{ func.annotations.path }}

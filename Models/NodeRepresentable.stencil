@@ -13,14 +13,14 @@ import {{ var }}
 {% endif %}
 
 extension {{ type.localName }}: NodeRepresentable {
-    internal enum NodeKeys {
+    {{ type.accessLevel }} enum NodeKeys {
         {% for var in type.storedVariables|!annotated:"ignore"|!annotated:"ignoreNodeRepresentable" %}
-        static let {{ var.annotations.nodeKey|default:var.name }} = "{{ var.annotations.nodeKey|default:var.name }}"
+        {{ type.accessLevel }} static let {{ var.annotations.nodeKey|default:var.name }} = "{{ var.annotations.nodeKey|default:var.name }}"
         {% endfor %}
     }
 
     // MARK: - NodeRepresentable ({{ type.name }})
-    func makeNode(in context: Context?) throws -> Node {
+    {{ type.accessLevel }} func makeNode(in context: Context?) throws -> Node {
         var node = Node([:])
 
         try node.set({{ type.name }}.idKey, id)
