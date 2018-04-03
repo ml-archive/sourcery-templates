@@ -63,5 +63,4 @@ extension {{ enum.name }} {
     {{ type.accessLevel }} static let allRaw = {{ enum.name }}.all.map { $0.rawValue }
     {% endif %}
 }
-
 {% endfor %}
