@@ -32,7 +32,7 @@ extension RawStringConvertible  {
                 reason: "Expected a String"
             )
         }
-        
+
         guard let state = Self.init(rawValue: string) else {
             throw Abort(
                 .internalServerError,
@@ -40,27 +40,28 @@ extension RawStringConvertible  {
                 reason: "Invalid case: \(string)"
             )
         }
-        
+
         self = state
     }
-    
+
     public func makeNode(in context: Context?) throws -> Node {
         return .string(self.rawValue)
     }
 }
 
 // MARK: Enums
-
 {% for enum in types.enums|!annotated:"ignore" where arguments.enumOptOut or enum.annotations.enum or enum.based.RawStringConvertible %}
 
 extension {{ enum.name }} {
     {{ type.accessLevel }} static var all: [{{ enum.name }}] = [
         {% for case in enum.cases %}
-        .{{ case.name }},
+        .{{ case.name }}{% if not forloop.last %},{% endif %}
         {% endfor %}
     ]
+    {% if enum.rawTypeName != nil %}
 
     {{ type.accessLevel }} static let allRaw = {{ enum.name }}.all.map { $0.rawValue }
+    {% endif %}
 }
 
 {% endfor %}
