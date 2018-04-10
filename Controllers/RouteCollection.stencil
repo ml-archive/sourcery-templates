@@ -1,8 +1,10 @@
-{# One route file per model #}
+{# One file with all routes #}
+
+// sourcery:file:Routes.generated.swift
+import Vapor
 
 {% for type in types.all|!protocol|annotated:"controller" %}
-// sourcery:file:Routes/{{ type.localName }}/{{ type.localName }}+RouteCollection.generated.swift
-import Vapor
+// MARK: {{ type.localName }} routes
 
 extension {{ type.localName }}: RouteCollection {
     {{ type.accessLevel }} func build(_ builder: RouteBuilder) throws {
@@ -15,5 +17,6 @@ extension {{ type.localName }}: RouteCollection {
     }
 }
 
-// sourcery:end
 {% endfor %}
+
+// sourcery:end
