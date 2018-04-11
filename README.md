@@ -435,7 +435,7 @@ extension UserForm {
 | Key | Description |
 | --- | --- |
 | `form` | Opt-in a type conforming to `Form` to use this template. |
-| `ignoreField` | Opt-out a specific field from all extension |
+| `ignoreField` | Opt-out a specific field from all extensions |
 | `ignoreAssertValues` | Opt-out a specific field from being included in the `assertValues` function. |
 
 ## Tests
