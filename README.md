@@ -46,12 +46,14 @@ final class User: Model {
 - [Controllers](#controllers)
   - [RouteCollection](#routecollection)
     - [Annotations](#annotations-4)
+- [Forms](#forms)
+    - [Annotations](#annotations-5)
 - [Tests](#tests)
   - [LinuxMain](#linuxmain)
-    - [Annotations](#annotations-5)
+    - [Annotations](#annotations-6)
 - [General](#general)
   - [Enums](#enums)
-    - [Annotations](#annotations-6)
+    - [Annotations](#annotations-7)
 - [Configuration](#configuration)
   - [Options](#options)
 - [Credits](#credits)
@@ -366,6 +368,73 @@ extension UserController: RouteCollection {
 | `route`  | Set the controller method to be generated as a route. This would require `method` and `path` to be set as well. |
 | `method` | The method of the route.                 |
 | `path`   | The path for the route.                  |
+
+## Forms
+
+This template makes working with [Forms](https://github.com/nodes-vapor/forms) more convenient by annotating them with "form".
+
+| Note: Make sure to postfix your field properties with "Field" so that the generated value accessors don't conflict with the field names.
+
+Example:
+
+```swift
+// sourcery: form
+struct UserForm: Form {
+    let nameField: FormField<String>
+    let ageField: FormField<Int>
+
+    ...
+}
+```
+
+Becomes:
+
+```swift
+extension UserForm {
+    var fields: [FieldType] {
+        return [
+            nameField,
+            ageField
+        ]
+    }
+}
+
+extension UserForm {
+    var name: String? {
+        return nameField.value
+    }
+    var age: Int? {
+        return ageField.value
+    }
+}
+
+extension UserForm {
+    internal func assertValues(errorOnNil: Error = Abort(.internalServerError)) throws -> (
+        name: String,
+        age: Int
+    ) {
+        guard
+            let name = name,
+            let age = age
+        else {
+            throw errorOnNil
+        }
+
+        return (
+            name,
+            age
+        )
+    }
+}
+```
+
+### Annotations
+
+| Key | Description |
+| --- | --- |
+| `form` | Opt-in a type conforming to `Form` to use this template. |
+| `ignoreField` | Opt-out a specific field from all extensions |
+| `ignoreAssertValues` | Opt-out a specific field from being included in the `assertValues` function. |
 
 ## Tests
 These templates are related to unit testing with XCTest.

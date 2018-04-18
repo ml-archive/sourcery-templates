@@ -1,0 +1,50 @@
+{# One file per Form #}
+
+{% for type in types.based.Form|!protocol|annotated:"form" %}
+// sourcery:file:Forms/{{ type.localName }}/{{ type.localName }}+Form.generated.swift
+import Forms
+
+extension {{ type.localName }} {
+    {{ type.accessLevel }} var fields: [FieldType] {
+        return [
+{% for variable in type.variables where variable.typeName|hasPrefix:"FormField<" and variable|!annotated:"ignoreField" %}
+            {{ variable.name }}{% if not forloop.last %},{% endif %}
+{% endfor %}
+        ]
+    }
+}
+
+extension {{ type.localName }} {
+{% for variable in type.variables where variable.typeName|hasPrefix:"FormField<" and variable|!annotated:"ignoreField" %}
+    {{ type.accessLevel }} var {{ variable.name|replace:"Field",""}}: {{variable.typeName.name|replace:"FormField<",""|replace:">",""}}? {
+        return {{ variable.name }}.value
+    }
+{% endfor %}
+}
+
+{% if type|!annotated:"ignoreAssertValues" %}
+extension {{ type.localName }} {
+    {{ type.accessLevel }} func assertValues(errorOnNil: Error = Abort(.internalServerError)) throws -> (
+{% for variable in type.variables where variable.typeName|hasPrefix:"FormField<" and variable|!annotated:"ignoreAssertValues" and variable|!annotated:"ignoreField" %}
+        {%if not forloop.last or not forloop.first %}{{ variable.name|replace:"Field",""}}: {% endif %}{{variable.typeName.name|replace:"FormField<",""|replace:">",""}}{% if not forloop.last %},{% endif %}
+{% endfor %}
+    ) {
+        guard
+{% for variable in type.variables where variable.typeName|hasPrefix:"FormField<" and variable|!annotated:"ignoreAssertValues" and variable|!annotated:"ignoreField" %}
+            let {{ variable.name|replace:"Field",""}} = {{ variable.name|replace:"Field",""}}{% if not forloop.last %},{% endif %}
+{% endfor %}
+        else {
+            throw errorOnNil
+        }
+
+        return (
+{% for variable in type.variables where variable.typeName|hasPrefix:"FormField<" and variable|!annotated:"ignoreAssertValues" and variable|!annotated:"ignoreField" %}
+            {{ variable.name|replace:"Field",""}}{% if not forloop.last %},{% endif %}
+{% endfor %}
+        )
+    }
+}
+
+{% endif %}
+// sourcery:end
+{% endfor %}
